@@ -1,376 +1,287 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Home, Book, AlertCircle, Phone, Menu, X } from 'lucide-react';
 
-export default function IlacSitesi() {
+export default function App() {
+  // 1. Akordeon State (5 Altın Soru)
+  const [activeAccordion, setActiveAccordion] = useState(null);
+
+  // 2. QR Kod Simülatör State
+  const [qrScanned, setQrScanned] = useState(false);
+
+  // 3. Şifahane Ses Oynatıcı State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
-    document.title = "Bilinçli Doz - Akılcı İlaç Kullanımı";
-  }, []);
-
-  const [page, setPage] = useState('home');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const altinSorular = [
-    {
-      soru: "Bu ilaç bana neden verildi?",
-      aciklama: "İlacın tedavi ettiği hastalığı ve neden size gerekli olduğunu doktorunuzdan öğrenin."
-    },
-    {
-      soru: "Bu ilaçtan nasıl yararlanırım?",
-      aciklama: "Doğru dozda, doğru zamanda, doğru şekilde almak önemlidir. Talimatları dikkatle okuyun."
-    },
-    {
-      soru: "Bu ilacın yan etkileri nelerdir?",
-      aciklama: "Olası yan etkileri bilin. Ağır yan etkiler görürseniz hemen doktorunuzu arayın."
-    },
-    {
-      soru: "Bu ilaç diğer ilaçlarla etkileşime girerse ne olur?",
-      aciklama: "Aldığınız diğer ilaçlar, takviyeler ve besinler hakkında doktorunuzu bilgilendirin."
-    },
-    {
-      soru: "Bu ilaçtan güvenli midir?",
-      aciklama: "Reçete talimatlarına uyun. Dosyahınızı izleyin ve düzenli doktor kontrolleri yaptırın."
+    let interval;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setProgress((prev) => (prev >= 100 ? 0 : prev + 1));
+      }, 150);
+    } else {
+      clearInterval(interval);
     }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  const toggleAccordion = (id) => {
+    setActiveAccordion(activeAccordion === id ? null : id);
+  };
+
+  const goldenQuestions = [
+    { id: 1, title: "İlacı nasıl hazırlayacağım?", desc: "Özellikle toz halindeki süspansiyon ilaçlar veya şurupların sulandırılma oranları, steril su kullanımı ve çalkalama süreleri hayati önem taşır. Yanlış hazırlanan ilaçlar etkinliğini kaybedebilir veya eksik doz alınmasına sebep olur." },
+    { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verebilir veya bağırsaktaki emilimi engelleyebilir. Doğru uygulama şifanın ilk şartıdır." },
+    { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir (24 saat / 3) alınması gerekir. Saat düzenine milimetrik sadakat, bakterilerin veya hastalığın boşluk bulmasını engeller.' },
+    { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Özellikle antibiyotiklerde, vücutta kalan dirençli az sayıdaki mikroorganizma tedavinin yarıda kesilmesiyle çoğalarak hastalığın çok daha şiddetli nüksetmesine neden olur." },
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye ve ciddi zehirlenmelere yol açabilir. Süt ürünleri ise bazı antibiyotiklerin emilimini tamamen durdurabilir." }
   ];
 
-  const ilaclarOrnek = [
-    {
-      ad: "Lisinopril",
-      kategori: "Tansiyon İlacı",
-      yanEtkiler: "Baş dönmesi, kuru öksürük, yorgunluk",
-      kullanim: "Günde 1 defa, sabahları yemek ile birlikte alınız"
-    },
-    {
-      ad: "Metformin",
-      kategori: "Diyabet İlacı",
-      yanEtkiler: "Mide bulantısı, iştahsızlık, midede rahatsızlık",
-      kullanim: "Günde 2-3 kez, yemeklerle birlikte alınız"
-    },
-    {
-      ad: "Atorvastatin",
-      kategori: "Kolesterol İlacı",
-      yanEtkiler: "Kas ağrıları, baş ağrısı, sindirim sorunları",
-      kullanim: "Günde 1 defa, akşamları alınız"
-    },
-    {
-      ad: "Amlodipine",
-      kategori: "Tansiyon İlacı",
-      yanEtkiler: "Düşük tansiyon, baş dönmesi, ayak şişmesi",
-      kullanim: "Günde 1 defa, sabahları alınız"
-    },
-    {
-      ad: "Levothyroxine",
-      kategori: "Tiroid İlacı",
-      yanEtkiler: "Kalp çarpıntısı, tremor, uyku sorunları",
-      kullanim: "Sabahları, aç karnına, su ile birlikte alınız"
-    }
-  ];
-
-  const filtredilmisIlaclar = ilaclarOrnek.filter(ilac =>
-    ilac.ad.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ilac.kategori.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const kullanimRehberi = [
-    {
-      baslik: "İlaçlarınızı Organize Edin",
-      adim: "Haftaya göre hazırlanan ilaç kutuları kullanın. Her kutuya gün ve saat yazılı etiketler yapıştırın."
-    },
-    {
-      baslik: "Alındı Listesi Tutun",
-      adim: "Aldığınız her ilacı bir kağıda yazın. Doktor kontrolleri için bu listeyi yanınızda taşıyın."
-    },
-    {
-      baslik: "Saatini Ayarla",
-      adim: "Telefonda ya da saatte alarm kurun. Her ilaç zamanında hatırlanacak."
-    },
-    {
-      baslik: "Birlikte Almayın",
-      adim: "Bazı ilaçlar birlikte alındığında etkisini kaybeder. Doktorunuza sorun hangileri ayrı alınmalı."
-    },
-    {
-      baslik: "Yan Etkiler Hakkında",
-      adim: "İlaçlarınızın yan etkilerini bilin. Ağır yan etki görürseniz hemen doktorunuzu arayın."
-    }
-  ];
-
-  const MenuComponent = () => (
-    <nav className="bg-blue-700 text-white p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">💊 Bilinçli Doz</h1>
-          <button 
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden"
-          >
-            {menuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-        
-        <div className={`${menuOpen ? 'block' : 'hidden'} lg:flex gap-4 flex-wrap lg:flex-nowrap`}>
-          <button
-            onClick={() => { setPage('home'); setMenuOpen(false); }}
-            className={`px-6 py-2 rounded-lg text-lg font-semibold transition ${page === 'home' ? 'bg-white text-blue-700' : 'bg-blue-600 hover:bg-blue-500'}`}
-          >
-            <Home className="inline mr-2" size={20} /> Ana Sayfa
-          </button>
-          <button
-            onClick={() => { setPage('sorular'); setMenuOpen(false); }}
-            className={`px-6 py-2 rounded-lg text-lg font-semibold transition ${page === 'sorular' ? 'bg-white text-blue-700' : 'bg-blue-600 hover:bg-blue-500'}`}
-          >
-            ❓ 5 Altın Soru
-          </button>
-          <button
-            onClick={() => { setPage('ilac'); setMenuOpen(false); }}
-            className={`px-6 py-2 rounded-lg text-lg font-semibold transition ${page === 'ilac' ? 'bg-white text-blue-700' : 'bg-blue-600 hover:bg-blue-500'}`}
-          >
-            <Search className="inline mr-2" size={20} /> İlaç Arama
-          </button>
-          <button
-            onClick={() => { setPage('yan'); setMenuOpen(false); }}
-            className={`px-6 py-2 rounded-lg text-lg font-semibold transition ${page === 'yan' ? 'bg-white text-blue-700' : 'bg-blue-600 hover:bg-blue-500'}`}
-          >
-            <AlertCircle className="inline mr-2" size={20} /> Yan Etkiler
-          </button>
-          <button
-            onClick={() => { setPage('rehber'); setMenuOpen(false); }}
-            className={`px-6 py-2 rounded-lg text-lg font-semibold transition ${page === 'rehber' ? 'bg-white text-blue-700' : 'bg-blue-600 hover:bg-blue-500'}`}
-          >
-            <Book className="inline mr-2" size={20} /> Rehber
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-
-  const AnaSayfa = () => (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-8 mb-8 border-2 border-blue-200">
-        <h2 className="text-4xl font-bold text-blue-800 mb-4">Hoş Geldiniz!</h2>
-        <p className="text-xl text-gray-700 mb-4">
-          Bilinçli Doz, akılcı ilaç kullanımı konusunda bilgi ve rehberlik sunan bir platformdur.
-        </p>
-        <p className="text-lg text-gray-600">
-          QR kodunuzu tarayarak bu sayfaya ulaştınız. İlaçlarınızı doğru kullanmak için gerekli bilgiler burada bulunmaktadır.
-        </p>
-      </div>
-
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8">
-        <h3 className="text-2xl font-bold text-yellow-800 mb-4">⚠️ ÖNEMLİ</h3>
-        <p className="text-lg text-yellow-900">
-          Bu sitedeki bilgiler eğitim amaçlıdır. Herhangi bir tıbbi karar almadan önce lütfen doktorunuza danışın.
-        </p>
-      </div>
-
-      <h3 className="text-3xl font-bold text-blue-800 mb-6 text-center">5 ALTIN SORU</h3>
-      <p className="text-xl text-center text-gray-600 mb-8">
-        Her ilaç aldığınızda bu 5 soruyu kendinize sorun:
-      </p>
-
-      <div className="grid gap-6">
-        {altinSorular.map((item, idx) => (
-          <div key={idx} className="bg-white border-2 border-blue-300 rounded-lg p-6 hover:shadow-lg transition">
-            <div className="flex items-start gap-4">
-              <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 text-xl font-bold">
-                {idx + 1}
-              </div>
-              <div>
-                <h4 className="text-2xl font-bold text-blue-800 mb-2">{item.soru}</h4>
-                <p className="text-lg text-gray-700">{item.aciklama}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const SorularSayfasi = () => (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-4xl font-bold text-blue-800 mb-8">5 ALTIN SORU</h2>
-      <p className="text-xl text-gray-600 mb-8 bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
-        Aldığınız her ilacı kullanmadan önce bu soruların cevaplarını doktorunuzdan veya eczacınızdan öğrenin.
-      </p>
-
-      <div className="space-y-6">
-        {altinSorular.map((item, idx) => (
-          <div key={idx} className="bg-gradient-to-r from-blue-50 to-white border-2 border-blue-300 rounded-lg p-8">
-            <div className="flex gap-4 mb-4">
-              <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center flex-shrink-0 text-2xl font-bold">
-                {idx + 1}
-              </div>
-              <h3 className="text-3xl font-bold text-blue-800 flex items-center">{item.soru}</h3>
-            </div>
-            <div className="ml-20">
-              <p className="text-xl text-gray-700 leading-relaxed">{item.aciklama}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-green-50 border-2 border-green-300 rounded-lg p-8 mt-8">
-        <h3 className="text-2xl font-bold text-green-800 mb-4">💡 İPUÇU</h3>
-        <p className="text-lg text-green-900">
-          Bu soruların cevaplarını bir kağıda yazın ve her doktor ziyaretinde yanınıza alın. 
-          Böylece hiçbir şey unutmayacaksınız.
-        </p>
-      </div>
-    </div>
-  );
-
-  const IlacArama = () => (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-4xl font-bold text-blue-800 mb-8">İLAÇ ARAMA</h2>
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans">
       
-      <div className="mb-8">
-        <input
-          type="text"
-          placeholder="İlaç adı veya türü yazın..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-6 py-4 text-xl border-2 border-blue-300 rounded-lg focus:outline-none focus:border-blue-600"
-        />
-      </div>
+      {/* MENÜ ALANI */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-2">
+              <div className="bg-teal-600 text-white p-2 rounded-xl shadow-md">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+              </div>
+              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-teal-950 to-teal-700 bg-clip-text text-transparent">Bilinçli Doz</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+              <a href="#vizyon" className="hover:text-teal-600 transition">Vizyonumuz</a>
+              <a href="#altin-sorular" class="hover:text-teal-600 transition">5 Altın Soru</a>
+              <a href="#qr-rehber" className="hover:text-teal-600 transition">QR Kod Sistemi</a>
+              <a href="#sifahane" className="hover:text-teal-600 transition">Dijital Şifahane</a>
+            </div>
+            <div>
+              <span className="hidden sm:inline-block text-xs font-semibold bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full border border-teal-100">Sosyal Sorumluluk Hareketi</span>
+            </div>
+          </div>
+        </div>
+      </nav>
 
-      {filtredilmisIlaclar.length > 0 ? (
-        <div className="space-y-6">
-          {filtredilmisIlaclar.map((ilac, idx) => (
-            <div key={idx} className="bg-white border-2 border-gray-300 rounded-lg p-6 hover:shadow-lg transition">
-              <h3 className="text-3xl font-bold text-blue-700 mb-3">{ilac.ad}</h3>
-              <div className="mb-4 p-3 bg-blue-100 rounded-lg border-l-4 border-blue-600">
-                <p className="text-lg font-semibold text-blue-800">{ilac.kategori}</p>
-              </div>
-              <div className="mb-4">
-                <p className="text-lg font-semibold text-gray-700 mb-2">Kullanım:</p>
-                <p className="text-xl text-gray-600 bg-gray-50 p-4 rounded-lg">{ilac.kullanim}</p>
-              </div>
-              <div>
-                <p className="text-lg font-semibold text-red-700 mb-2">⚠️ Olası Yan Etkiler:</p>
-                <p className="text-xl text-gray-600 bg-red-50 p-4 rounded-lg border-l-4 border-red-400">{ilac.yanEtkiler}</p>
+      {/* GİRİŞ (HERO) BÖLÜMÜ */}
+      <header id="vizyon" className="relative bg-gradient-to-br from-teal-950 via-teal-900 to-emerald-950 text-white py-24 px-4 text-center overflow-hidden">
+        <div className="max-w-5xl mx-auto relative z-10 space-y-8">
+          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase">
+            🌱 Akılcı İlaç & Bütünsel Sağlık Hareketi
+          </div>
+          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
+            Bilinçli Doz ve <br/>
+            <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent italic font-serif font-normal">Dijital Şifahane</span>
+          </h1>
+          <p className="text-base sm:text-lg text-teal-100/80 max-w-2xl mx-auto leading-relaxed">
+            Giderek artan bilinçsiz ilaç kullanımının yıkıcı etkilerine dikkat çekiyoruz. Modern tıbbın rasyonel ilkelerini, Türk-İslam medeniyetinin ruhu ve bedeni bütünleştiren kadim darüşşifa kültürüyle harmanlıyoruz.
+          </p>
+          <div className="pt-4 flex flex-wrap justify-center gap-4">
+            <a href="#altin-sorular" className="bg-emerald-500 hover:bg-emerald-400 text-teal-950 font-bold px-8 py-3.5 rounded-xl shadow-lg transition text-sm">
+              5 Altın Soru'yu Keşfet
+            </a>
+            <a href="#sifahane" className="bg-white/5 hover:bg-white/10 text-white border border-white/20 font-medium px-8 py-3.5 rounded-xl transition text-sm">
+              Müzik Terapisini Dinle
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* TEHLİKE VE FARKINDALIK KARTLARI */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-rose-50 flex flex-col justify-between">
+            <div>
+              <div className="bg-rose-50 text-rose-600 h-12 w-12 rounded-xl flex items-center justify-center mb-6 text-xl">⚠️</div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Antibiyotik Direnci</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Gereksiz ve yarım bırakılan antibiyotik kullanımı, bakterilerin direnç kazanmasına neden olarak en basit enfeksiyonları bile gelecekte ölümcül hale getiriyor.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 text-xs font-semibold text-rose-600 bg-rose-50 py-2 px-3 rounded-lg w-fit">Kritik Küresel Tehdit</div>
+          </div>
+
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-amber-50 flex flex-col justify-between">
+            <div>
+              <div className="bg-amber-50 text-amber-600 h-12 w-12 rounded-xl flex items-center justify-center mb-6 text-xl">💊</div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Organ Tahribatı</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                En ufak bir fiziksel veya ruhsal gerilimde hemen kimyasal ağrı kesicilere sarılmak, karaciğer ve böbreklerimizde geri dönüşsüz hasarlar bırakıyor.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 text-xs font-semibold text-amber-600 bg-amber-50 py-2 px-3 rounded-lg w-fit">Psikosomatik Yükler</div>
+          </div>
+
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-teal-50 flex flex-col justify-between">
+            <div>
+              <div className="bg-teal-50 text-teal-600 h-12 w-12 rounded-xl flex items-center justify-center mb-6 text-xl">📉</div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">Milli Ekonomik İsraf</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Evlerde bilinçsizce biriktirilen, kullanılmayan ve tarihi geçerek çöpe atılan atıl ilaçlar her yıl milyonlarca dolarlık milli servet kaybına yol açıyor.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 text-xs font-semibold text-teal-600 bg-teal-50 py-2 px-3 rounded-lg w-fit">Maddi & Ekolojik Kayıp</div>
+          </div>
+        </div>
+      </section>
+
+      {/* İNTERAKTİF 5 ALTIN SORU */}
+      <section id="altin-sorular" className="py-24 max-w-5xl mx-auto px-4">
+        <div className="text-center space-y-4 mb-16">
+          <span className="text-xs font-bold uppercase tracking-widest text-teal-600 bg-teal-50 px-3 py-1 rounded-md">Akılcı İlaç Danışmanlığı</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">İlaç Kullanırken "5 Altın Soru"</h2>
+          <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base">
+            Sağlığınızı korumak adına, doktorunuzdan veya eczacınızdan ilaçlarınızı teslim alırken bu 5 temel sorunun cevabını mutlaka öğrenin.
+          </p>
+        </div>
+
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {goldenQuestions.map((q) => (
+            <div key={q.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm transition">
+              <button 
+                onClick={() => toggleAccordion(q.id)} 
+                className="w-full flex items-center justify-between p-5 text-left font-semibold text-slate-900 hover:bg-slate-50 transition"
+              >
+                <span className="flex items-center gap-3 text-sm sm:text-base">
+                  <span className="h-7 w-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center text-xs font-bold shrink-0">{q.id}</span>
+                  {q.title}
+                </span>
+                <svg 
+                  className={`w-4 integrate-icon h-4 text-slate-400 transition-transform duration-300 ${activeAccordion === q.id ? 'raw-icon rotate-180' : ''}`} 
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className="transition-all duration-300 overflow-hidden" 
+                style={{ maxHeight: activeAccordion === q.id ? '200px' : '0px' }}
+              >
+                <p className="p-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                  {q.desc}
+                </p>
               </div>
             </div>
           ))}
         </div>
-      ) : (
-        <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-8 text-center">
-          <p className="text-2xl text-yellow-800">Aradığınız ilaç bulunamadı.</p>
-          <p className="text-lg text-yellow-700 mt-2">Lütfen ilaç adını doğru yazın veya doktorunuza danışın.</p>
-        </div>
-      )}
-    </div>
-  );
+      </section>
 
-  const YanEtkiler = () => (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-4xl font-bold text-red-700 mb-8">⚠️ YAN ETKİLER VE UYARILAR</h2>
+      {/* QR KOD REHBERİ VE SİMÜLATÖR */}
+      <section id="qr-rehber" className="bg-teal-900 text-white py-24 px-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+          <div className="space-y-6">
+            <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-md text-xs font-bold tracking-wider uppercase">Teknoloji Entegrasyonu</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight">İlaç Kutularındaki QR Kodlar ve Saklama Isısı</h2>
+            <p className="text-teal-100/80 leading-relaxed text-sm sm:text-base">
+              İlaç kutularının üzerinde yer alan karekodlar (İlaç Takip Sistemi - ITS), ilacın sadece sahte olup olmadığını denetlemez; aynı zamanda o ilacın dijital kimlik kartıdır.
+            </p>
+            <div className="bg-teal-950/40 p-5 rounded-xl border border-teal-800 space-y-3">
+              <h4 className="font-bold text-emerald-400 flex items-center gap-2 text-sm sm:text-base">❄️ Soğuk Zincir ve Saklama Dereceleri</h4>
+              <p className="text-xs sm:text-sm text-teal-200/90 leading-relaxed">
+                Çoğu ilaç 15-25°C arasındaki oda sıcaklığında saklanırken, bazı biyolojik ürünler, insülinler ve aşılar 2-8°C buzdolabı ortamı (soğuk zincir) gerektirir. Uygun sıcaklıkta tutulmayan ilaçların kimyasal yapısı bozularak şifa yerine toksik maddelere dönüşebilir.
+              </p>
+            </div>
+          </div>
 
-      <div className="bg-red-50 border-2 border-red-400 rounded-lg p-8 mb-8">
-        <h3 className="text-2xl font-bold text-red-800 mb-4">ACIL DURUMDA NE YAPMALI?</h3>
-        <p className="text-xl text-red-900 mb-4">
-          Aşağıdaki durumları yaşarsanız hemen doktor arayın veya hastaneye gidin:
-        </p>
-        <ul className="text-lg text-red-900 space-y-3 ml-6">
-          <li>• Nefes almakta zorlanma</li>
-          <li>• Göğüste şiddetli ağrı</li>
-          <li>• Ciddi alerjik reaksiyonlar (şişme, çıban)</li>
-          <li>• Şiddetli başdönmesi ve bilinç kaybı</li>
-          <li>• Gaita veya idrada kan</li>
-          <li>• Şiddetli kas ağrıları</li>
-        </ul>
-      </div>
-
-      <div className="space-y-6">
-        <div className="bg-white border-2 border-yellow-400 rounded-lg p-6">
-          <h3 className="text-2xl font-bold text-yellow-700 mb-4">🚫 Sık Görülen Yan Etkiler</h3>
-          <p className="text-lg text-gray-700 mb-4">
-            Çoğu ilacın hafif yan etkileri olabilir. İlk birkaç gün içinde genellikle geçer.
-          </p>
-          <ul className="text-lg text-gray-700 space-y-2 ml-6">
-            <li>• Mide bulantısı</li>
-            <li>• Baş ağrısı</li>
-            <li>• Uyku sorunları</li>
-            <li>• Dönem ağrısı</li>
-          </ul>
-        </div>
-
-        <div className="bg-white border-2 border-orange-400 rounded-lg p-6">
-          <h3 className="text-2xl font-bold text-orange-700 mb-4">⚠️ Dikkat Edilmesi Gereken Yan Etkiler</h3>
-          <p className="text-lg text-gray-700 mb-4">
-            Bu yan etkileri yaşarsanız doktorunuzu bilgilendirin:
-          </p>
-          <ul className="text-lg text-gray-700 space-y-2 ml-6">
-            <li>• Kalp çarpıntısı</li>
-            <li>• Ciddi ishal veya kabızlık</li>
-            <li>• Cilt döküntüsü</li>
-            <li>• Görme sorunları</li>
-            <li>• İştahsızlık</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
-
-  const Rehber = () => (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-4xl font-bold text-green-800 mb-8">📖 KULLANIM REHBERİ</h2>
-
-      <p className="text-xl text-gray-700 bg-green-50 p-6 rounded-lg border-2 border-green-300 mb-8">
-        İlaçlarınızı doğru kullanmak, tedavinin başarısının en önemli kısmıdır. 
-        Aşağıdaki adımları takip ederek ilaçlarınızı en etkili şekilde kullanabilirsiniz.
-      </p>
-
-      <div className="space-y-6">
-        {kullanimRehberi.map((item, idx) => (
-          <div key={idx} className="bg-white border-2 border-green-300 rounded-lg p-6 hover:shadow-lg transition">
-            <div className="flex items-start gap-4">
-              <div className="bg-green-600 text-white rounded-full w-14 h-14 flex items-center justify-center flex-shrink-0 text-2xl font-bold">
-                {idx + 1}
+          <div className="flex justify-center">
+            <div className="bg-white text-slate-900 p-8 rounded-3xl shadow-2xl max-w-sm w-full border-4 border-teal-950 text-center space-y-4">
+              <div className="mx-auto bg-slate-100 p-6 rounded-2xl w-fit relative">
+                <svg className="w-24 h-24 text-teal-950" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2V15H5zm13 1h1v1h-1v-1zm-2-2h2v2h-2v-2zm2-2h1v2h-1v-2zm-2 0h1v1h-1V11zm4 4h1v3h-1v-3zm-2 2h1v2h-2v-2zm-2-2h1v1h-1v-1zm4-4h2v2h-2v-2zm0 4h1v1h-1v-1z"/>
+                </svg>
+                <div className="absolute inset-0 border-2 border-emerald-500 rounded-2xl animate-pulse m-4"></div>
               </div>
-              <div>
-                <h3 className="text-2xl font-bold text-green-800 mb-3">{item.baslik}</h3>
-                <p className="text-lg text-gray-700">{item.adim}</p>
+              <h4 className="font-bold text-lg">Karekod Bilgi Sistemi</h4>
+              <p className="text-xs text-slate-500">Aşağıdaki butona tıklayarak bir ilaç kutusu üzerindeki QR kodun simülasyon çıktısını test edin.</p>
+              
+              <button 
+                onClick={() => setQrScanned(true)} 
+                className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition tracking-wide shadow-md"
+              >
+                📸 KAREKODU SİMÜLE ET
+              </button>
+
+              {qrScanned && (
+                <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-left space-y-2 animate-fade-in">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-emerald-800 uppercase tracking-wider">
+                    <span>Durum: Bakanlık Onaylı</span>
+                    <span className="text-emerald-600">✓</span>
+                  </div>
+                  <div className="text-xs font-bold text-slate-900">Parasetamol 500 mg Tablet</div>
+                  <div className="text-[11px] text-slate-600 space-y-1 border-t border-emerald-200/50 pt-2 mt-1">
+                    <div><strong>Maksimum Isı:</strong> 25°C (Oda Sıcaklığı)</div>
+                    <div><strong>Nem Koşulu:</strong> Kuru, Kutusunda ve Işıksız Ortam</div>
+                    <div className="text-rose-600 font-semibold mt-1">⚠ Buzdolabına koymayınız, dondurmayınız.</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DİJİTAL ŞİFAHANE VE MÜZİK TERAPİ */}
+      <section id="sifahane" className="py-24 max-w-6xl mx-auto px-4">
+        <div className="bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-stone-100 rounded-3xl p-8 md:p-16 border border-amber-200/50 grid md:grid-cols-5 gap-12 items-center relative overflow-hidden">
+          <div className="md:col-span-3 space-y-6">
+            <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Kültürel Miras & Ruhsal Arınma</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar ve Müzik Terapisi</h2>
+            <p className="text-slate-700 leading-relaxed text-sm sm:text-base">
+              Projemiz, her psikolojik gerginlikte, uykusuzlukta veya strese bağlı baş ağrısında hemen ağır kimyasallara sığınmak yerine insanı ruh ve beden bütünlüğüyle ele alır.
+            </p>
+            <p className="text-slate-600 leading-relaxed text-sm">
+              Ecdadımız, Selçuklu ve Osmanlı darüşşifalarında hastaları su sesi ve özel müzik makamlarıyla tedavi ediyordu. Büyük İslam hekim ve düşünürleri İbn Sina ve Farabi, hangi makamın günün hangi saatinde zihne ve fıtrata iyi geldiğini bilimsel olarak tasnif etmişlerdi.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="bg-white/80 p-3 rounded-xl border border-amber-200/40">
+                <div class="font-bold text-amber-900 text-xs sm:text-sm">Rast Makamı</div>
+                <div className="text-[11px] text-slate-500">İnsana neşe, sefa ve iç huzuru verir; kemik ve kas sistemine olumlu etkileri bilinir.</div>
+              </div>
+              <div className="bg-white/80 p-3 rounded-xl border border-amber-200/40">
+                <div className="font-bold text-amber-900 text-xs sm:text-sm">Nihavend Makamı</div>
+                <div className="text-[11px] text-slate-500">Kan dolaşımını sakinleştirir, tansiyonu dengeler, zihni derin düşüncelerden arındırır.</div>
               </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-8 mt-8">
-        <h3 className="text-2xl font-bold text-blue-800 mb-4">💊 İLAÇ ALMADA İPUÇLARI</h3>
-        <ul className="text-lg text-blue-900 space-y-3 ml-6">
-          <li>• İlaçları belli saatlerde almaya alışkanlık yapın</li>
-          <li>• Bazı ilaçlar yemek ile birlikte alınmalıdır</li>
-          <li>• Çok sıcak su ile ilaç almayın</li>
-          <li>• İlaçları asla kendiniz değiştirmeyin</li>
-          <li>• İlaçlarınızı serin ve kuru yerde tutun</li>
-          <li>• Süre dolduktan sonra eski ilaçları kullanmayın</li>
-        </ul>
-      </div>
-    </div>
-  );
+          <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-xl border border-amber-200/30 space-y-4">
+            <div className="text-center font-bold text-sm text-amber-950 uppercase tracking-wider pb-2 border-b border-slate-100">
+              Şifahane Ses Oynatıcı
+            </div>
+            <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl">
+              <button 
+                onClick={() => setIsPlaying(!isPlaying)} 
+                className="h-10 w-10 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center transition shrink-0 shadow-md"
+              >
+                {isPlaying ? '⏸' : '▶'}
+              </button>
+              <div className="w-full">
+                <div className={`text-xs font-bold transition-colors ${isPlaying ? 'text-amber-600' : 'text-slate-900'}`}>Rast Makamı - Kadim Terapi Melodisi</div>
+                <div className="text-[10px] text-slate-500">Geleneksel Ney & Ud Sentezi (Simüle Oynatım)</div>
+                <div className="w-full bg-slate-200 h-1 rounded-full mt-2 overflow-hidden">
+                  <div className="bg-amber-600 h-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                </div>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-500 italic text-center leading-normal">
+              *Müzik terapisi, zihinsel dinginlik sağlayarak stres kaynaklı psikosomatik ilaç ihtiyacını (anksiyete, uykusuzluk hapları vb.) azaltmayı hedefler.
+            </p>
+          </div>
+        </div>
+      </section>
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <MenuComponent />
-      
-      {page === 'home' && <AnaSayfa />}
-      {page === 'sorular' && <SorularSayfasi />}
-      {page === 'ilac' && <IlacArama />}
-      {page === 'yan' && <YanEtkiler />}
-      {page === 'rehber' && <Rehber />}
-
-      <footer className="bg-gray-800 text-white p-6 mt-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-2">Dijital Şifahane - Bilinçli Doz</h3>
-          <p className="text-lg mb-4">Akılcı İlaç Kullanımı İçin Bilgi Platformu</p>
-          <p className="text-sm opacity-80">
-            Bu site sadece eğitim amaçlıdır. Tıbbi danışmanız doktor ve eczacılarınız olmalıdır.
+      {/* FOOTER */}
+      <footer className="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800 text-center text-xs">
+        <div className="max-w-4xl mx-auto space-y-4">
+          <p className="font-bold text-slate-300 text-sm">Bilinçli Doz - Akılcı İlaç Kullanımı Sosyal Sorumluluk Projesi</p>
+          <p className="max-w-xl mx-auto text-slate-500 leading-relaxed">
+            Bu web sitesi, toplum sağlığını tehdit eden gereksiz ilaç tüketimine karşı toplumsal bilinç oluşturmak amacıyla hazırlanmış bir mezuniyet ödevi çalışmasıdır.
           </p>
-          <p className="text-sm mt-4 opacity-70">
-            ☎️ Acil Durumda: 112 • Zehir Danışma Merkezi: 0 312 312 20 20
-          </p>
+          <div className="pt-4 text-slate-600 border-t border-slate-800">
+            &copy; 2026 Bilinçli Doz ve Dijital Şifahane Hareketi. Tüm Hakları Saklıdır.
+          </div>
         </div>
       </footer>
+
     </div>
   );
 }
