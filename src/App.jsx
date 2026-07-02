@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function App() {
   // 1. Akordeon State (5 Altın Soru)
@@ -7,21 +7,62 @@ export default function App() {
   // 2. QR Kod Simülatör State
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 3. Şifahane Ses Oynatıcı State
+  // 3. GERÇEK SES OYNATICI SİSTEMİ
+  const audioTracks = [
+    { id: 'rast', name: 'Rast Makamı - Kadim Terapi Melodisi', desc: 'Geleneksel Ney & Ud Sentezi', src: '/rast.mp3' },
+    { id: 'nihavend', name: 'Nihavend Makamı - Rahatlık Melodisi', desc: 'Derin Dinlendirici Kanun & Ney Sentezi', src: '/nihavend.mp3' }
+  ];
+
+  const [currentTrack, setCurrentTrack] = useState(audioTracks[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  
+  const audioRef = useRef(null);
 
-  useEffect(() => {
-    let interval;
+  // Oynatma/Durdurma Kontrolü
+  const togglePlay = () => {
     if (isPlaying) {
-      interval = setInterval(() => {
-        setProgress((prev) => (prev >= 100 ? 0 : prev + 1));
-      }, 150);
+      audioRef.current.pause();
     } else {
-      clearInterval(interval);
+      audioRef.current.play().catch(err => console.log("Ses dosyası yüklenemedi:", err));
     }
-    return () => clearInterval(interval);
-  }, [isPlaying]);
+    setIsPlaying(!isPlaying);
+  };
+
+  // Makam Değiştirme Kontrolü
+  const changeTrack = (track) => {
+    setCurrentTrack(track);
+    setIsPlaying(false);
+    setProgress(0);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+    }
+  };
+
+  // Müzik çalarken ilerleme çubuğunu güncelleme
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      const current = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      if (duration) {
+        setProgress((current / duration) * 100);
+      }
+    }
+  };
+
+  // Müzik bittiğinde otomatik durdurma veya başa sarma
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+    setProgress(0);
+  };
+
+  // Şarkı çalarken makam değişirse otomatik oynat
+  useEffect(() => {
+    if (isPlaying && audioRef.current) {
+      audioRef.current.play().catch(() => setIsPlaying(false));
+    }
+  }, [currentTrack]);
 
   const toggleAccordion = (id) => {
     setActiveAccordion(activeAccordion === id ? null : id);
@@ -38,6 +79,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans">
       
+      {/* GİZLİ HTML5 AUDIO ETİKETİ (Arka Planda Sesi Çalan Motor) */}
+      <audio 
+        ref={audioRef} 
+        src={currentTrack.src} 
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={handleAudioEnded}
+      />
+
       {/* MENÜ ALANI */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +99,7 @@ export default function App() {
             </div>
             <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
               <a href="#vizyon" className="hover:text-teal-600 transition">Vizyonumuz</a>
-              <a href="#altin-sorular" class="hover:text-teal-600 transition">5 Altın Soru</a>
+              <a href="#altin-sorular" className="hover:text-teal-600 transition">5 Altın Soru</a>
               <a href="#qr-rehber" className="hover:text-teal-600 transition">QR Kod Sistemi</a>
               <a href="#sifahane" className="hover:text-teal-600 transition">Dijital Şifahane</a>
             </div>
@@ -145,7 +194,7 @@ export default function App() {
                   {q.title}
                 </span>
                 <svg 
-                  className={`w-4 integrate-icon h-4 text-slate-400 transition-transform duration-300 ${activeAccordion === q.id ? 'raw-icon rotate-180' : ''}`} 
+                  className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${activeAccordion === q.id ? 'rotate-180' : ''}`} 
                   fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -176,7 +225,7 @@ export default function App() {
             <div className="bg-teal-950/40 p-5 rounded-xl border border-teal-800 space-y-3">
               <h4 className="font-bold text-emerald-400 flex items-center gap-2 text-sm sm:text-base">❄️ Soğuk Zincir ve Saklama Dereceleri</h4>
               <p className="text-xs sm:text-sm text-teal-200/90 leading-relaxed">
-                Çoğu ilaç 15-25°C arasındaki oda sıcaklığında saklanırken, bazı biyolojik ürünler, insülinler ve aşılar 2-8°C buzdolabı ortamı (soğuk zincir) gerektirir. Uygun sıcaklıkta tutulmayan ilaçların kimyasal yapısı bozularak şifa yerine toksik maddelere dönüşebilir.
+                Çoğu ilaç 15-25°C arasındaki oda sıcaklığında saklanırken, bazı biyolojik ürünler, insülinler og aşılar 2-8°C buzdolabı ortamı (soğuk zincir) gerektirir. Uygun sıcaklıkta tutulmayan ilaçların kimyasal yapısı bozularak şifa yerine toksik maddelere dönüşebilir.
               </p>
             </div>
           </div>
@@ -208,7 +257,7 @@ export default function App() {
                   <div className="text-xs font-bold text-slate-900">Parasetamol 500 mg Tablet</div>
                   <div className="text-[11px] text-slate-600 space-y-1 border-t border-emerald-200/50 pt-2 mt-1">
                     <div><strong>Maksimum Isı:</strong> 25°C (Oda Sıcaklığı)</div>
-                    <div><strong>Nem Koşulu:</strong> Kuru, Kutusunda ve Işıksız Ortam</div>
+                    <div><strong>Nem Koşulu:</strong> Kuru, Kutusunda og Işıksız Ortam</div>
                     <div className="text-rose-600 font-semibold mt-1">⚠ Buzdolabına koymayınız, dondurmayınız.</div>
                   </div>
                 </div>
@@ -221,51 +270,72 @@ export default function App() {
       {/* DİJİTAL ŞİFAHANE VE MÜZİK TERAPİ */}
       <section id="sifahane" className="py-24 max-w-6xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-stone-100 rounded-3xl p-8 md:p-16 border border-amber-200/50 grid md:grid-cols-5 gap-12 items-center relative overflow-hidden">
+          
           <div className="md:col-span-3 space-y-6">
             <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Kültürel Miras & Ruhsal Arınma</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar ve Müzik Terapisi</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar og Müzik Terapisi</h2>
             <p className="text-slate-700 leading-relaxed text-sm sm:text-base">
-              Projemiz, her psikolojik gerginlikte, uykusuzlukta veya strese bağlı baş ağrısında hemen ağır kimyasallara sığınmak yerine insanı ruh ve beden bütünlüğüyle ele alır.
+              Projemiz, her psikolojik gerginlikte, uykusuzlukta veya strese bağlı baş ağrısında hemen ağır kimyasallara sığınmak yerine insanı ruh og beden bütünlüğüyle ele alır.
             </p>
             <p className="text-slate-600 leading-relaxed text-sm">
-              Ecdadımız, Selçuklu ve Osmanlı darüşşifalarında hastaları su sesi ve özel müzik makamlarıyla tedavi ediyordu. Büyük İslam hekim ve düşünürleri İbn Sina ve Farabi, hangi makamın günün hangi saatinde zihne ve fıtrata iyi geldiğini bilimsel olarak tasnif etmişlerdi.
+              Ecdadımız, Selçuklu og Osmanlı darüşşifalarında hastaları su sesi ve özel müzik makamlarıyla tedavi ediyordu. Büyük İslam hekim og düşünürleri İbn Sina ve Farabi, hangi makamın günün hangi saatinde zihne ve fıtrata iyi geldiğini bilimsel olarak tasnif etmişlerdi.
             </p>
             
+            {/* İnteraktif Makam Seçim Kartları */}
             <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="bg-white/80 p-3 rounded-xl border border-amber-200/40">
-                <div class="font-bold text-amber-900 text-xs sm:text-sm">Rast Makamı</div>
-                <div className="text-[11px] text-slate-500">İnsana neşe, sefa ve iç huzuru verir; kemik ve kas sistemine olumlu etkileri bilinir.</div>
-              </div>
-              <div className="bg-white/80 p-3 rounded-xl border border-amber-200/40">
-                <div className="font-bold text-amber-900 text-xs sm:text-sm">Nihavend Makamı</div>
-                <div className="text-[11px] text-slate-500">Kan dolaşımını sakinleştirir, tansiyonu dengeler, zihni derin düşüncelerden arındırır.</div>
-              </div>
+              <button 
+                onClick={() => changeTrack(audioTracks[0])}
+                className={`p-4 rounded-xl border text-left transition ${currentTrack.id === 'rast' ? 'bg-amber-600/10 border-amber-600 shadow-md' : 'bg-white/80 border-amber-200/40 hover:bg-amber-50'}`}
+              >
+                <div className="font-bold text-amber-900 text-xs sm:text-sm flex items-center justify-between">
+                  <span>Rast Makamı</span>
+                  {currentTrack.id === 'rast' && <span className="text-amber-600">● Seçili</span>}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">İnsana neşe, sefa ve iç huzuru verir; kemik sistemine iyi gelir.</div>
+              </button>
+              
+              <button 
+                onClick={() => changeTrack(audioTracks[1])}
+                className={`p-4 rounded-xl border text-left transition ${currentTrack.id === 'nihavend' ? 'bg-amber-600/10 border-amber-600 shadow-md' : 'bg-white/80 border-amber-200/40 hover:bg-amber-50'}`}
+              >
+                <div className="font-bold text-amber-900 text-xs sm:text-sm flex items-center justify-between">
+                  <span>Nihavend Makamı</span>
+                  {currentTrack.id === 'nihavend' && <span className="text-amber-600">● Seçili</span>}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">Kan dolaşımını sakinleştirir, zihni derin düşüncelerden arındırır.</div>
+              </button>
             </div>
           </div>
 
+          {/* GERÇEK SES OYNATICI PANELİ */}
           <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-xl border border-amber-200/30 space-y-4">
             <div className="text-center font-bold text-sm text-amber-950 uppercase tracking-wider pb-2 border-b border-slate-100">
               Şifahane Ses Oynatıcı
             </div>
             <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl">
               <button 
-                onClick={() => setIsPlaying(!isPlaying)} 
-                className="h-10 w-10 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center transition shrink-0 shadow-md"
+                onClick={togglePlay} 
+                className="h-12 w-12 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center transition shrink-0 shadow-md text-lg"
               >
                 {isPlaying ? '⏸' : '▶'}
               </button>
               <div className="w-full">
-                <div className={`text-xs font-bold transition-colors ${isPlaying ? 'text-amber-600' : 'text-slate-900'}`}>Rast Makamı - Kadim Terapi Melodisi</div>
-                <div className="text-[10px] text-slate-500">Geleneksel Ney & Ud Sentezi (Simüle Oynatım)</div>
-                <div className="w-full bg-slate-200 h-1 rounded-full mt-2 overflow-hidden">
-                  <div className="bg-amber-600 h-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                <div className={`text-xs font-bold transition-colors ${isPlaying ? 'text-amber-600 animate-pulse' : 'text-slate-900'}`}>
+                  {currentTrack.name}
+                </div>
+                <div className="text-[10px] text-slate-500">{currentTrack.desc}</div>
+                
+                {/* Dinamik İlerleme Çubuğu */}
+                <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
+                  <div className="bg-amber-600 h-full transition-all duration-100" style={{ width: `${progress}%` }}></div>
                 </div>
               </div>
             </div>
             <p className="text-[11px] text-slate-500 italic text-center leading-normal">
-              *Müzik terapisi, zihinsel dinginlik sağlayarak stres kaynaklı psikosomatik ilaç ihtiyacını (anksiyete, uykusuzluk hapları vb.) azaltmayı hedefler.
+              *Müzik seçimi yaptıktan sonra oynat butonuna basın. Gerçek makam melodileri zihinsel dinginlik sağlayarak stres kaynaklı psikosomatik ilaç ihtiyacını azaltmayı hedefler.
             </p>
           </div>
+
         </div>
       </section>
 
