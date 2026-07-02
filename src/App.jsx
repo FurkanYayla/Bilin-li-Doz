@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 YENİLEDİĞİNİZ DOSYA İSİMLERİNE GÖRE GÜNCEL SES ENTEGRASYONU
+  // 🌟 BOŞLUKSUZ VE TAM UYUMLU GERÇEK SES ENTEGRASYONU
   const audioTracks = [
     { 
       id: 'ney-dinlendirici', 
@@ -22,13 +22,13 @@ export default function App() {
       id: 'ud-sesi-1', 
       name: 'Ud Terapisi - Parça 1', 
       desc: 'Zihni dinlendiren kadim ud tınıları', 
-      src: '/ud sesi 1.mp3' 
+      src: '/ud-sesi-1.mp3' 
     },
     { 
       id: 'ud-sesi-2', 
       name: 'Ud Terapisi - Parça 2', 
       desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
-      src: '/ud sesi 2.mp3' 
+      src: '/ud-sesi-2.mp3' 
     }
   ];
 
@@ -77,7 +77,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans">
       
-      {/* ARKA PLAN SES MOTORU */}
+      {/* GERÇEK ARKA PLAN SES MOTORU */}
       <audio 
         ref={audioRef} 
         src={currentTrack.src} 
@@ -178,7 +178,7 @@ export default function App() {
             </div>
             <div className="w-full space-y-4">
               <div className="flex justify-center items-center gap-2 text-xs font-bold text-teal-800 bg-teal-50 border border-teal-100 py-1.5 px-4 rounded-full w-fit mx-auto">
-                <span>⚡ HEMEN OKUT!</span><span className="text-stone-400">→</span><span className="text-emerald-700">Eğitici Videolar</span>
+                <span>⚡ HEMEN OKUT!</span><span className="text-stone-400">→</span><span className="text-emerald-700">Eğitici Videoslar</span>
               </div>
               <div className="flex justify-center gap-6 pt-1 text-stone-600 text-xs font-bold">
                 <span>🎵 TikTok</span><span>📺 YouTube</span><span>📸 Instagram</span>
@@ -206,11 +206,11 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (4 GERÇEK MÜZİKLİ ALAN) */}
+      {/* DİJİTAL ŞİFAHANE (BOŞLUKSUZ YENİ SES DOSYALARI) */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50 to-stone-100 rounded-3xl p-8 md:p-12 border grid md:grid-cols-5 gap-8 items-center">
           <div className="md:col-span-3 space-y-6">
-            <h2 className="text-3xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar ve Müzik Terapisi</h2>
+            <h2 className="text-3xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar og Müzik Terapisi</h2>
             <p className="text-slate-600 text-sm">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Yüklediğiniz gerçek ses dosyaları arasından seçim yaparak şifa melodilerini canlandırın.</p>
             
             {/* 4 Şarkı İçin Dinamik Seçim Butonları */}
