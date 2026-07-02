@@ -20,13 +20,13 @@ export default function App() {
     },
     { 
       id: 'mountain-oud', 
-      name: 'The Mountain Oud', 
+      name: 'Ud Sesi 1', 
       desc: 'Zihni dinlendiren derin ud tınıları', 
       src: '/the_mountain-oud-310094.mp3' 
     },
     { 
       id: 'happy-oud', 
-      name: 'India Happy Oud', 
+      name: 'Ud Sesi 2', 
       desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
       src: '/india_happy-oud-488103.mp3' 
     }
