@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 BOŞLUKSUZ VE TAM UYUMLU GERÇEK SES ENTEGRASYONU
+  // 🌟 PUBLIC KLASÖRÜNDEKİ YENİ BOŞLUKSUZ DOSYA İSİMLERİNİZ
   const audioTracks = [
     { 
       id: 'ney-dinlendirici', 
@@ -37,29 +37,58 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
-  const togglePlay = () => {
-    if (isPlaying) { 
-      audioRef.current.pause(); 
-    } else { 
-      audioRef.current.play().catch(err => console.log("Ses dosyası oynatılamadı", err)); 
+  // 🌟 SAFARI VE REACT ZAMANLAMA ÇAKIŞMASINI ÇÖZEN SİHİRLİ EFEKT
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load(); // Yeni dosyayı tarayıcı hafızasına güvenli bir şekilde zorla yükler
+      setProgress(0);
+      
+      // Eğer bir müzik zaten çalarken kullanıcı başka bir makama tıkladıysa, güvenli şekilde geçiş yapıp oynatır
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Otomatik oynatma tarayıcı tarafından engellendi:", error);
+            setIsPlaying(false);
+          });
+        }
+      }
     }
-    setIsPlaying(!isPlaying);
+  }, [currentTrack]);
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      // Doğrudan kullanıcı tıklamasıyla tetiklendiği için Safari engeline takılmaz
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(err => {
+          console.log("Oynatma hatası:", err);
+          alert("Ses dosyası şu an yüklenemedi. Lütfen internetinizi kontrol edip tekrar deneyin.");
+        });
+    }
   };
 
   const changeTrack = (track) => {
     setCurrentTrack(track);
-    setIsPlaying(false);
-    setProgress(0);
-    if (audioRef.current) { 
-      audioRef.current.pause(); 
-      audioRef.current.load(); 
-    }
   };
 
   const handleTimeUpdate = () => {
     if (audioRef.current && audioRef.current.duration) {
       setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
     }
+  };
+
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+    setProgress(0);
   };
 
   const toggleAccordion = (id) => {
@@ -71,18 +100,18 @@ export default function App() {
     { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Doğru uygulama şifanın ilk şartıdır." },
     { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: 'Kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir (günde 3 defa) alınması gerekir. Saat düzenine sadakat şarttır.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Bakterilerin direnç kazanmaması için tedavi süresi tamamlanmalıdır." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Özellikle greyfurt suyu ilaçların etkisini tehlikeli düzeyde artırabilir; süt ürünleri ise bazı antibiyotiklerin emilimini durdurabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Özellikle greyfurt suyu ilaçların etkisini tehlikeli düzeyde artırabilir; süt ürünleri ise bazı antibiyotiklerin emilimini tamamen durdurabilir." }
   ];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans">
       
-      {/* GERÇEK ARKA PLAN SES MOTORU */}
+      {/* ARKA PLAN GERÇEK SES ELEMANI */}
       <audio 
         ref={audioRef} 
         src={currentTrack.src} 
         onTimeUpdate={handleTimeUpdate} 
-        onEnded={() => setIsPlaying(false)} 
+        onEnded={handleAudioEnded} 
       />
 
       {/* MENÜ ALANI */}
@@ -178,7 +207,7 @@ export default function App() {
             </div>
             <div className="w-full space-y-4">
               <div className="flex justify-center items-center gap-2 text-xs font-bold text-teal-800 bg-teal-50 border border-teal-100 py-1.5 px-4 rounded-full w-fit mx-auto">
-                <span>⚡ HEMEN OKUT!</span><span className="text-stone-400">→</span><span className="text-emerald-700">Eğitici Videoslar</span>
+                <span>⚡ HEMEN OKUT!</span><span className="text-stone-400">→</span><span className="text-emerald-700">Eğitici Videolar</span>
               </div>
               <div className="flex justify-center gap-6 pt-1 text-stone-600 text-xs font-bold">
                 <span>🎵 TikTok</span><span>📺 YouTube</span><span>📸 Instagram</span>
@@ -206,14 +235,14 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (BOŞLUKSUZ YENİ SES DOSYALARI) */}
+      {/* DİJİTAL ŞİFAHANE (ZIRHLI SES SEÇİM ALANI) */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50 to-stone-100 rounded-3xl p-8 md:p-12 border grid md:grid-cols-5 gap-8 items-center">
           <div className="md:col-span-3 space-y-6">
-            <h2 className="text-3xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar og Müzik Terapisi</h2>
+            <h2 className="text-3xl font-bold text-amber-950 font-serif">Kadim Darüşşifalar ve Müzik Terapisi</h2>
             <p className="text-slate-600 text-sm">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Yüklediğiniz gerçek ses dosyaları arasından seçim yaparak şifa melodilerini canlandırın.</p>
             
-            {/* 4 Şarkı İçin Dinamik Seçim Butonları */}
+            {/* 4 Şarkı Seçim Alanı */}
             <div className="grid sm:grid-cols-2 gap-3">
               {audioTracks.map((track) => (
                 <button 
@@ -232,11 +261,11 @@ export default function App() {
           <div className="md:col-span-2 bg-white p-6 rounded-xl border space-y-3 w-full">
             <div className="text-center font-bold text-xs text-amber-950 uppercase tracking-wider pb-1 border-b">Şifahane Audio Player</div>
             <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-lg">
-              <button onClick={togglePlay} className="h-10 w-10 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center font-bold shadow shrink-0">
+              <button onClick={togglePlay} className="h-10 w-10 bg-amber-600 hover:bg-amber-700 text-white rounded-full flex items-center justify-center font-bold shadow shrink-0 text-sm">
                 {isPlaying ? '⏸' : '▶'}
               </button>
               <div className="w-full text-xs min-w-0">
-                <div className={`font-bold truncate ${isPlaying ? 'text-amber-600 animate-pulse' : ''}`}>{currentTrack.name}</div>
+                <div className={`font-bold truncate ${isPlaying ? 'text-amber-600' : 'text-slate-900'}`}>{currentTrack.name}</div>
                 <div className="w-full bg-slate-200 h-1 rounded-full mt-2 overflow-hidden">
                   <div className="bg-amber-600 h-full transition-all duration-100" style={{ width: `${progress}%` }}></div>
                 </div>
