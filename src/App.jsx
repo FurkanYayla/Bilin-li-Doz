@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 YÜKLEDİĞİNİZ GERÇEK 4 SES DOSYASININ KOD ENTEGRASYONU
+  // 🌟 YENİLEDİĞİNİZ DOSYA İSİMLERİNE GÖRE GÜNCEL SES ENTEGRASYONU
   const audioTracks = [
     { 
       id: 'ney-dinlendirici', 
@@ -19,16 +19,16 @@ export default function App() {
       src: '/ney-demedim-tasavvuf-muzigi.mp3' 
     },
     { 
-      id: 'mountain-oud', 
-      name: 'Ud Sesi 1', 
-      desc: 'Zihni dinlendiren derin ud tınıları', 
-      src: '/the_mountain-oud-310094.mp3' 
+      id: 'ud-sesi-1', 
+      name: 'Ud Terapisi - Parça 1', 
+      desc: 'Zihni dinlendiren kadim ud tınıları', 
+      src: '/ud sesi 1.mp3' 
     },
     { 
-      id: 'happy-oud', 
-      name: 'Ud Sesi 2', 
+      id: 'ud-sesi-2', 
+      name: 'Ud Terapisi - Parça 2', 
       desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
-      src: '/india_happy-oud-488103.mp3' 
+      src: '/ud sesi 2.mp3' 
     }
   ];
 
@@ -71,13 +71,13 @@ export default function App() {
     { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Doğru uygulama şifanın ilk şartıdır." },
     { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: 'Kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir (günde 3 defa) alınması gerekir. Saat düzenine sadakat şarttır.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Bakterilerin direnç kazanmaması için tedavi süresi tamamlanmalıdır." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Örneğin greyfurt suyu ilaçların etkisini tehlikeli düzeyde artırabilir; süt ürünleri ise bazı antibiyotiklerin emilimini durdurabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Özellikle greyfurt suyu ilaçların etkisini tehlikeli düzeyde artırabilir; süt ürünleri ise bazı antibiyotiklerin emilimini durdurabilir." }
   ];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans">
       
-      {/* GERÇEK ARKA PLAN SES MOTORU */}
+      {/* ARKA PLAN SES MOTORU */}
       <audio 
         ref={audioRef} 
         src={currentTrack.src} 
@@ -206,7 +206,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (4 DİNAMİK PARÇALI YENİ ALAN) */}
+      {/* DİJİTAL ŞİFAHANE (4 GERÇEK MÜZİKLİ ALAN) */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50 to-stone-100 rounded-3xl p-8 md:p-12 border grid md:grid-cols-5 gap-8 items-center">
           <div className="md:col-span-3 space-y-6">
