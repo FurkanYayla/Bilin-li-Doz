@@ -4,33 +4,34 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 SES DOSYALARI (GitHub public klasöründeki isimlerinizle birebir uyumlu)
+    // 🌟 KARAKTER HATALARINI SIFIRLAYAN NUMARALI SES ENTEGRASYONU
   const audioTracks = [
     { 
       id: 'ney-dinlendirici', 
       name: 'Ney Dinlendirici Müzik', 
       desc: 'Ruhsal dinginlik veren kadim ney sesi', 
-      src: '/ney-dinlendirici-muzik-ney-sesi.mp3' 
+      src: '/1.mp3' 
     },
     { 
       id: 'ney-tasavvuf', 
       name: 'Ney Tasavvuf Müziği', 
       desc: 'Geleneksel darüşşifa terapi nameleri', 
-      src: '/ney-demedim-tasavvuf-muzigi.mp3' 
+      src: '/2.mp3' 
     },
     { 
       id: 'ud-sesi-1', 
       name: 'Ud Terapisi - Parça 1', 
       desc: 'Zihni dinlendiren kadim ud tınıları', 
-      src: '/ud sesi 1.mp3' // Önemli: GitHub public klasöründe aradaki boşlukları tire (-) yaptıysanız kusursuz çalışır
+      src: '/3.mp3' 
     },
     { 
       id: 'ud-sesi-2', 
       name: 'Ud Terapisi - Parça 2', 
       desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
-      src: '/ud sesi 2.mp3' 
+      src: '/4.mp3' 
     }
   ];
+
 
   const [currentTrack, setCurrentTrack] = useState(audioTracks[0]);
   const [isPlaying, setIsPlaying] = useState(false);
