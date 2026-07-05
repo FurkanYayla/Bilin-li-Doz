@@ -22,13 +22,13 @@ export default function App() {
       id: 'ud-sesi-1', 
       name: 'Ud Terapisi - Parça 1', 
       desc: 'Zihni dinlendiren kadim ud tınıları', 
-      src: '/ud-sesi-1.mp3' // Önemli: GitHub public klasöründe aradaki boşlukları tire (-) yaptıysanız kusursuz çalışır
+      src: '/ud sesi 1.mp3' // Önemli: GitHub public klasöründe aradaki boşlukları tire (-) yaptıysanız kusursuz çalışır
     },
     { 
       id: 'ud-sesi-2', 
       name: 'Ud Terapisi - Parça 2', 
       desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
-      src: '/ud-sesi-2.mp3' 
+      src: '/ud sesi 2.mp3' 
     }
   ];
 
