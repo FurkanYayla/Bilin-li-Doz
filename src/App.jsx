@@ -1,63 +1,48 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-    // 🌟 KARAKTER HATALARINI SIFIRLAYAN NUMARALI SES ENTEGRASYONU
+  // 🌟 SADECE YÜKLEDİĞİNİZ İKİ YENİ NEY SESİNE UYARLANMIŞ SES LİSTESİ
   const audioTracks = [
     { 
-      id: 'ney-dinlendirici', 
-      name: 'Ney Dinlendirici Müzik', 
-      desc: 'Ruhsal dinginlik veren kadim ney sesi', 
-      src: '/1.mp3' 
+      id: 'ney-sesi-2', 
+      name: 'Ney Terapisi - Parça 1', 
+      desc: 'Ruhsal dinginlik ve iç huzuru veren kadim ney nameleri', 
+      src: '/neysesi-2.mp3' 
     },
     { 
-      id: 'ney-tasavvuf', 
-      name: 'Ney Tasavvuf Müziği', 
-      desc: 'Geleneksel darüşşifa terapi nameleri', 
-      src: '/2.mp3' 
-    },
-    { 
-      id: 'ud-sesi-1', 
-      name: 'Ud Terapisi - Parça 1', 
-      desc: 'Zihni dinlendiren kadim ud tınıları', 
-      src: '/3.mp3' 
-    },
-    { 
-      id: 'ud-sesi-2', 
-      name: 'Ud Terapisi - Parça 2', 
-      desc: 'Pozitif ve bütünsel enerji veren ud sentezi', 
-      src: '/4.mp3' 
+      id: 'ney-sesi-2', 
+      name: 'Ney Terapisi - Parça 2', 
+      desc: 'Zihni arındıran bütünsel darüşşifa melodisi', 
+      src: '/neysesi-2.mp3' 
     }
   ];
-
 
   const [currentTrack, setCurrentTrack] = useState(audioTracks[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
-  // 🌟 SAFARI'Yİ REKOR HIZDA İKNA EDEN DOĞRUDAN OYNATMA MOTORU
-  const handleTrackSelect = (track) => {
-    setCurrentTrack(track);
-    setIsPlaying(true);
-    setProgress(0);
-
+  // Safari ve React zamanlama çakışmasını çözen doğrudan yükleme motoru
+  useEffect(() => {
     if (audioRef.current) {
-      // Safari'nin event stack'ini kaybetmemek için doğrudan DOM müdahalesi
-      audioRef.current.src = track.src;
-      audioRef.current.load();
+      audioRef.current.pause();
+      audioRef.current.load(); 
+      setProgress(0);
       
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log("Safari Güvenlik Engeli:", error);
-          setIsPlaying(false);
-        });
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Safari engeli:", error);
+            setIsPlaying(false);
+          });
+        }
       }
     }
-  };
+  }, [currentTrack]);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -69,12 +54,15 @@ export default function App() {
       audioRef.current.play()
         .then(() => setIsPlaying(true))
         .catch(err => {
-          console.log("Oynatma başarısız:", err);
-          // Eğer kaynak değişti ve yüklenmediyse senkronize et
+          console.log("Oynatma hatası:", err);
           audioRef.current.src = currentTrack.src;
           audioRef.current.play().then(() => setIsPlaying(true));
         });
     }
+  };
+
+  const changeTrack = (track) => {
+    setCurrentTrack(track);
   };
 
   const handleTimeUpdate = () => {
@@ -84,17 +72,16 @@ export default function App() {
   };
 
   const goldenQuestions = [
-    { id: 1, title: "İlacı nasıl hazırlayacağım?", desc: "Özellikle toz halindeki süspansiyon ilaçlar veya şurupların sulandırılma oranları, steril su kullanımı ve çalkalama süreleri hayati önem taşır. Yanlış hazırlanan ilaçlar etkinliğini kaybedebilir veya eksik doz alınmasına sebob olur." },
+    { id: 1, title: "İlacı nasıl hazırlayacağım?", desc: "Özellikle toz halindeki süspansiyon ilaçlar veya şurupların sulandırılma oranları, steril su kullanımı ve çalkalama süreleri hayati önem taşır. Yanlış hazırlanan ilaçlar etkinliğini kaybedebilir veya eksik doz alınmasına sebep olur." },
     { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verebilir veya bağırsaktaki emilimi engelleyebilir. Doğru uygulama şifanın ilk şartıdır." },
     { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir (24 saat / 3) alınması gerekir. Saat düzenine milimetrik sadakat, bakterilerin veya hastalığın boşluk bulmasını engeller.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Özellikle antibiyotiklerde, vücutta kalan dirençli az sayıdaki mikroorganizma tedavinin yarıda kesilmesiyle çoğalarak hastalığın çok daha şiddetli nüksetmesine neden olur." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye ve ciddi zehirlenmelere yol açabilir. Süt ürünleri ise bazı antibiyotiklerin emilimini tamamen durdurabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye og ciddi zehirlenmelere yol açabilir. Süt ürünleri ise bazı antibiyotiklerin emilimini tamamen durdurabilir." }
   ];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 antialiased overflow-x-hidden font-sans select-none">
       
-      {/* ARKA PLAN AUDIO ELEMENTİ */}
       <audio 
         ref={audioRef} 
         src={currentTrack.src} 
@@ -132,7 +119,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* 5 ALTIN SORU LİSTESİ (UI/UX Geliştirmeli) */}
+      {/* 5 ALTIN SORU LİSTESİ */}
       <section id="altin-sorular" className="py-24 max-w-4xl mx-auto px-4">
         <div className="text-center mb-16 space-y-2">
           <span className="text-xs font-bold text-teal-600 uppercase tracking-widest bg-teal-50 px-3 py-1 rounded-md">Reçete Danışmanlığı</span>
@@ -156,13 +143,8 @@ export default function App() {
                   </span>
                   <span className={`text-xs transition-transform duration-300 ${isCurrentActive ? 'rotate-180 text-teal-600' : 'text-slate-400'}`}>▼</span>
                 </button>
-                <div 
-                  className="transition-all duration-300 overflow-hidden" 
-                  style={{ maxHeight: isCurrentActive ? '250px' : '0px' }}
-                >
-                  <p className="p-6 text-sm text-slate-600 leading-relaxed border-t border-slate-100/80 font-medium">
-                    {q.desc}
-                  </p>
+                <div className="transition-all duration-300 overflow-hidden" style={{ maxHeight: isCurrentActive ? '250px' : '0px' }}>
+                  <p className="p-6 text-sm text-slate-600 leading-relaxed border-t border-slate-100/80 font-medium">{q.desc}</p>
                 </div>
               </div>
             );
@@ -170,7 +152,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL PROJE KARTLARI (Hover Etkili Broşür Alanı) */}
+      {/* DİJİTAL PROJE KARTLARI (BROŞÜR ALANI) */}
       <section id="dijital-kartlar" className="py-24 bg-stone-100/80 border-y border-stone-200/60 px-4">
         <div className="max-w-5xl mx-auto space-y-3 text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-100 px-3 py-1 rounded-md">Fiziksel Materyal Tasarımı</span>
@@ -179,7 +161,6 @@ export default function App() {
         </div>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start">
-          {/* KART 1: ÖN YÜZ */}
           <div className="bg-[#fcfbf7] rounded-[28px] shadow-lg border border-stone-200/80 p-8 min-h-[540px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
             <div>
               <div className="flex justify-between items-start border-b border-stone-200 pb-4 mb-6">
@@ -192,15 +173,14 @@ export default function App() {
               <div className="space-y-4 text-slate-800 text-sm font-semibold">
                 <div className="flex gap-3 items-start"><span className="text-teal-600 text-base shrink-0">💧</span> <div><strong className="text-slate-900 block font-bold">İlacı nasıl hazırlayacağım?</strong><span className="text-xs text-slate-500 font-normal">(Sulandırma, çalkalama vb.)</span></div></div>
                 <div className="flex gap-3 items-start"><span className="text-amber-500 text-base shrink-0">💊</span> <div><strong className="text-slate-900 block font-bold">İlacı nasıl kullanacağım?</strong></div></div>
-                <div className="flex gap-3 items-start"><span className="text-blue-500 text-base shrink-0">🕒</span> <div><strong className="text-slate-900 block font-bold">İlacı günün hangi saatlerinde og kaç kez kullanacağım?</strong></div></div>
+                <div className="flex gap-3 items-start"><span className="text-blue-500 text-base shrink-0">🕒</span> <div><strong className="text-slate-900 block font-bold">İlacı günün hangi saatlerinde ve kaç kez kullanacağım?</strong></div></div>
                 <div className="flex gap-3 items-start"><span className="text-rose-500 text-base shrink-0">📅</span> <div><strong className="text-slate-900 block font-bold">İlaç tedavim kaç gün sürecek?</strong></div></div>
-                <div className="flex gap-3 items-start"><span className="text-emerald-600 text-base shrink-0">🍽️</span> <div><strong className="text-slate-900 block font-bold">İlacı kullanırken kaçınmam gereken yiyecek og içecekler var mı?</strong></div></div>
+                <div className="flex gap-3 items-start"><span className="text-emerald-600 text-base shrink-0">🍽️</span> <div><strong className="text-slate-900 block font-bold">İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?</strong></div></div>
               </div>
             </div>
             <div className="text-center text-[11px] text-stone-500 border-t border-stone-200/60 pt-4 mt-6 font-bold italic">Anlamadığınız noktaları mutlaka sağlık uzmanınıza danışın.</div>
           </div>
 
-          {/* KART 2: ARKA YÜZ */}
           <div className="bg-[#fcfbf7] rounded-[28px] shadow-lg border-4 border-teal-600 p-8 min-h-[540px] flex flex-col justify-between items-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
             <h3 className="text-teal-950 font-black text-xl leading-snug max-w-xs mx-auto">Bilgini sor, ilacını doğru kullan, sağlığını koru.</h3>
             <div className="bg-white p-4 rounded-2xl shadow-md border border-stone-100 my-3 transition-transform duration-300 hover:scale-105">
@@ -228,7 +208,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* QR REHBERİ (Genişletilmiş ve Dengelenmiş UI Paneli) */}
+      {/* QR REHBERİ */}
       <section id="qr-rehber" className="bg-gradient-to-r from-teal-900 to-teal-950 text-white py-24 px-4 border-b border-teal-950">
         <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-12 items-center">
           <div className="md:col-span-7 space-y-6">
@@ -248,7 +228,7 @@ export default function App() {
                 KAREKODU SİMÜLE ET
               </button>
               {qrScanned && (
-                <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-left text-xs space-y-1.5 animate-fade-in">
+                <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-left text-xs space-y-1.5 shadow-sm">
                   <div className="font-bold text-slate-900 flex justify-between"><span>Parasetamol 500 mg</span> <span className="text-emerald-600">✓ Onaylı</span></div>
                   <div className="text-slate-600 font-medium"><strong>Maksimum Isı:</strong> 25°C (Oda Sıcaklığı)</div>
                   <div className="text-rose-600 font-bold text-[10px] bg-rose-50 p-1.5 rounded-lg border border-rose-100">⚠️ Buzdolabına koymayınız, dondurmayınız.</div>
@@ -259,29 +239,29 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (Aktif Parça Vurgulu Oynatıcı) */}
+      {/* DİJİTAL ŞİFAHANE (2 SÜTUNLU YENİ SADE OYNATICI ALANI) */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50 to-stone-100/60 rounded-[32px] p-8 md:p-14 border border-amber-200/50 grid md:grid-cols-5 gap-10 items-center shadow-sm">
           <div className="md:col-span-3 space-y-6">
             <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Kültürel Miras & Terapi</span>
             <h2 className="text-3xl font-black text-amber-950 font-serif tracking-tight">Kadim Darüşşifalar ve Müzik Terapisi</h2>
-            <p className="text-slate-600 text-sm leading-relaxed font-medium">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Aşağıdaki gerçek ses dosyalarından birini seçerek ruhsal dinginliği ve şifa melodilerini hemen canlandırın.</p>
+            <p className="text-slate-600 text-sm leading-relaxed font-medium">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Yüklediğiniz iki yeni özel ney sesini aşağıdan seçerek dinleyebilirsiniz.</p>
             
-            {/* 4 Şarkı Seçim Butonları (Geliştirilmiş UI) */}
+            {/* Sadece 2 Yeni Şarkı Butonu İçin Şık Tasarım */}
             <div className="grid sm:grid-cols-2 gap-3">
               {audioTracks.map((track) => {
                 const isSelected = currentTrack.id === track.id;
                 return (
                   <button 
                     key={track.id}
-                    onClick={() => handleTrackSelect(track)} 
-                    className={`p-3.5 rounded-2xl border text-left transition-all duration-300 ${isSelected ? 'bg-amber-600/10 border-amber-600 font-bold shadow-md ring-2 ring-amber-600/20' : 'bg-white border-stone-200 hover:border-amber-300 hover:bg-amber-50/30'}`}
+                    onClick={() => changeTrack(track)} 
+                    className={`p-4 rounded-2xl border text-left transition-all duration-300 ${isSelected ? 'bg-amber-600/10 border-amber-600 font-bold shadow-md ring-2 ring-amber-600/20' : 'bg-white border-stone-200 hover:border-amber-300 hover:bg-amber-50/30'}`}
                   >
                     <div className="text-amber-950 font-bold text-xs sm:text-sm flex items-center justify-between">
                       <span className="truncate">{track.name}</span>
-                      {isSelected && <span className="text-[10px] text-amber-600 shrink-0 font-black">{isPlaying ? '● OYNATILIYOR' : '● SEÇİLİ'}</span>}
+                      {isSelected && <span className="text-[10px] text-amber-600 shrink-0 font-black">{isPlaying ? '● AÇIK' : '● SEÇİLİ'}</span>}
                     </div>
-                    <div className="text-[10px] text-slate-500 mt-0.5 truncate font-medium">{track.desc}</div>
+                    <div className="text-[10px] text-slate-500 mt-1.5 truncate font-medium">{track.desc}</div>
                   </button>
                 );
               })}
@@ -299,7 +279,7 @@ export default function App() {
                 {isPlaying ? '⏸' : '▶'}
               </button>
               <div className="w-full text-xs min-w-0 space-y-1">
-                <div className={`font-black truncate transition-colors text-slate-900 ${isPlaying ? 'text-amber-600' : ''}`}>{currentTrack.name}</div>
+                <div className={`font-black truncate transition-colors text-slate-900 ${isPlaying ? 'text-amber-600 animate-pulse' : ''}`}>{currentTrack.name}</div>
                 <div className="text-[10px] text-slate-400 font-medium truncate">{currentTrack.desc}</div>
                 <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden relative">
                   <div className="bg-amber-600 h-full transition-all duration-75" style={{ width: `${progress}%` }}></div>
