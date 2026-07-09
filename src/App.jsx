@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // GÜNCEL SES LİSTESİ (neysesi-2 ve neysesi-3)
+  // MÜZİK DOSYALARI (neysesi-2 ve neysesi-3)
   const audioTracks = [
     { 
       id: 'ney-sesi-2', 
@@ -25,7 +25,7 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
 
-  // Safari ve React zamanlama çakışmasını çözen doğrudan yükleme motoru
+  // Safari zırhlı ses motoru
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -95,12 +95,25 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              {/* 🌟 PROJENİZİN YENİ KURUMSAL LOGOSU (KORUMALI YOL) */}
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-10 w-auto max-h-10 object-contain transition-transform duration-300 hover:scale-105"
-              />
+              
+              {/* 🌟 VEKTÖREL VE ASLA KIRILMAZ PROJE LOGONUZ (Heart + Pulse + Cross) */}
+              <svg 
+                className="h-9 w-9 text-blue-600 transition-transform duration-300 hover:scale-105 shrink-0" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                {/* Mavi Kalp Çerçevesi */}
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                {/* Kalbin İçindeki Nabız/ECG Dalgası */}
+                <path d="M6 12h2l1.5-3 1.5 6 1.5-4.5 1 1.5h2.5" strokeWidth="2" />
+                {/* Sağ Traftaki Medikal Artı İşareti */}
+                <path d="M15 7.5h3M16.5 6v3" strokeWidth="1.8" />
+              </svg>
+
               <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-teal-950 to-teal-700 bg-clip-text text-transparent">Bilinçli Doz</span>
             </div>
             <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
