@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // MÜZİK DOSYALARI (neysesi-2 ve neysesi-3)
+  // SEÇİLİ SES LİSTESİ (neysesi-2 ve neysesi-3)
   const audioTracks = [
     { 
       id: 'ney-sesi-2', 
@@ -76,7 +76,7 @@ export default function App() {
     { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verir veya emilimi engeller." },
     { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir alınması gerekir. Saat düzenine milimetrik sadakat şarttır.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Özellikle antibiyotiklerde, vücutta kalan dirençli az sayıdaki mikroorganizma tedavinin yarıda kesilmesiyle çoğalarak hastalığın çok daha şiddetli nüksetmesine neden olur." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye ve ciddi zehirlenmelere yol açabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye og ciddi zehirlenmelere yol açabilir." }
   ];
 
   return (
@@ -96,7 +96,7 @@ export default function App() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               
-              {/* 🌟 VEKTÖREL VE ASLA KIRILMAZ PROJE LOGONUZ (Heart + Pulse + Cross) */}
+              {/* NAVBAR LOGO (Heart + Pulse + Cross) */}
               <svg 
                 className="h-9 w-9 text-blue-600 transition-transform duration-300 hover:scale-105 shrink-0" 
                 viewBox="0 0 24 24" 
@@ -106,11 +106,8 @@ export default function App() {
                 strokeLinecap="round" 
                 strokeLinejoin="round"
               >
-                {/* Mavi Kalp Çerçevesi */}
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                {/* Kalbin İçindeki Nabız/ECG Dalgası */}
                 <path d="M6 12h2l1.5-3 1.5 6 1.5-4.5 1 1.5h2.5" strokeWidth="2" />
-                {/* Sağ Traftaki Medikal Artı İşareti */}
                 <path d="M15 7.5h3M16.5 6v3" strokeWidth="1.8" />
               </svg>
 
@@ -170,7 +167,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL PROJE KARTLARI (BROŞÜR ALANI) */}
+      {/* DİJİTAL PROJE KARTLARI (BROŞÜR ALANI - KART ÜSTÜ LOGO GÜNCELLENDİ) */}
       <section id="dijital-kartlar" className="py-24 bg-stone-100/80 border-y border-stone-200/60 px-4">
         <div className="max-w-5xl mx-auto space-y-3 text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-100 px-3 py-1 rounded-md">Fiziksel Materyal Tasarımı</span>
@@ -179,6 +176,8 @@ export default function App() {
         </div>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start">
+          
+          {/* KART 1: ÖN YÜZ (5 ALTIN SORU KARTI) */}
           <div className="bg-[#fcfbf7] rounded-[28px] shadow-lg border border-stone-200/80 p-8 min-h-[540px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
             <div>
               <div className="flex justify-between items-start border-b border-stone-200 pb-4 mb-6">
@@ -186,7 +185,24 @@ export default function App() {
                   <h3 className="text-stone-500 text-xs font-bold tracking-wider uppercase">İlacını Alırken</h3>
                   <h4 className="text-teal-950 font-black text-2xl tracking-tight mt-0.5">5 ALTIN SORU</h4>
                 </div>
-                <div className="text-2xl bg-teal-50 p-2 rounded-xl border border-teal-100">❤️‍🩹</div>
+                
+                {/* 🌟 REPLİKA KARTIN ÜZERİNE DE EKLENEN RESMİ PROJE LOGONUZ */}
+                <div className="bg-blue-50/60 p-2 rounded-xl border border-blue-100/80 text-blue-600 shadow-sm">
+                  <svg 
+                    className="h-7 w-7" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    <path d="M6 12h2l1.5-3 1.5 6 1.5-4.5 1 1.5h2.5" strokeWidth="2" />
+                    <path d="M15 7.5h3M16.5 6v3" strokeWidth="1.8" />
+                  </svg>
+                </div>
+
               </div>
               <div className="space-y-4 text-slate-800 text-sm font-semibold">
                 <div className="flex gap-3 items-start"><span className="text-teal-600 text-base shrink-0">💧</span> <div><strong className="text-slate-900 block font-bold">İlacı nasıl hazırlayacağım?</strong><span className="text-xs text-slate-500 font-normal">(Sulandırma, çalkalama vb.)</span></div></div>
@@ -199,6 +215,7 @@ export default function App() {
             <div className="text-center text-[11px] text-stone-500 border-t border-stone-200/60 pt-4 mt-6 font-bold italic">Anlamadığınız noktaları mutlaka sağlık uzmanınıza danışın.</div>
           </div>
 
+          {/* KART 2: ARKA YÜZ */}
           <div className="bg-[#fcfbf7] rounded-[28px] shadow-lg border-4 border-teal-600 p-8 min-h-[540px] flex flex-col justify-between items-center text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
             <h3 className="text-teal-950 font-black text-xl leading-snug max-w-xs mx-auto">Bilgini sor, ilacını doğru kullan, sağlığını koru.</h3>
             <div className="bg-white p-4 rounded-2xl shadow-md border border-stone-100 my-3 transition-transform duration-300 hover:scale-105">
