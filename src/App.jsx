@@ -90,20 +90,16 @@ export default function App() {
         preload="auto"
       />
 
-      {/* MENÜ ALANI (Kurumsal Logo Sol Üste Entegre Edildi) */}
+      {/* MENÜ ALANI */}
       <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-100/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              {/* 🌟 YENİ LOGO GÖRSELİNİZ */}
+              {/* 🌟 PROJENİZİN YENİ KURUMSAL LOGOSU (KORUMALI YOL) */}
               <img 
                 src="/logo.png" 
-                alt="Bilinçli Doz" 
-                className="h-10 w-auto object-contain transition-transform duration-300 hover:scale-105"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.style.display = 'none';
-                }}
+                alt="Logo" 
+                className="h-10 w-auto max-h-10 object-contain transition-transform duration-300 hover:scale-105"
               />
               <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-teal-950 to-teal-700 bg-clip-text text-transparent">Bilinçli Doz</span>
             </div>
