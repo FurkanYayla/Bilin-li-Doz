@@ -4,19 +4,19 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 SADECE YÜKLEDİĞİNİZ İKİ YENİ NEY SESİNE UYARLANMIŞ SES LİSTESİ
+  // 🌟 YENİ TALEBİNİZE GÖRE DÜZENLENMİŞ SES LİSTESİ (neysesi-2 ve neysesi-3)
   const audioTracks = [
     { 
       id: 'ney-sesi-2', 
       name: 'Ney Terapisi - Parça 1', 
-      desc: 'Ruhsal dinginlik ve iç huzuru veren kadim ney nameleri', 
+      desc: 'Geleneksel darüşşifa terapi nameleri', 
       src: '/neysesi-2.mp3' 
     },
     { 
-      id: 'ney-sesi-2', 
+      id: 'ney-sesi-3', 
       name: 'Ney Terapisi - Parça 2', 
-      desc: 'Zihni arındıran bütünsel darüşşifa melodisi', 
-      src: '/neysesi-2.mp3' 
+      desc: 'Ruhsal dinginlik ve iç huzuru veren kadim ney melodisi', 
+      src: '/neysesi-3.mp3' 
     }
   ];
 
@@ -73,10 +73,10 @@ export default function App() {
 
   const goldenQuestions = [
     { id: 1, title: "İlacı nasıl hazırlayacağım?", desc: "Özellikle toz halindeki süspansiyon ilaçlar veya şurupların sulandırılma oranları, steril su kullanımı ve çalkalama süreleri hayati önem taşır. Yanlış hazırlanan ilaçlar etkinliğini kaybedebilir veya eksik doz alınmasına sebep olur." },
-    { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verebilir veya bağırsaktaki emilimi engelleyebilir. Doğru uygulama şifanın ilk şartıdır." },
-    { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir (24 saat / 3) alınması gerekir. Saat düzenine milimetrik sadakat, bakterilerin veya hastalığın boşluk bulmasını engeller.' },
+    { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verir veya emilimi engeller." },
+    { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir alınması gerekir. Saat düzenine milimetrik sadakat şarttır.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Özellikle antibiyotiklerde, vücutta kalan dirençli az sayıdaki mikroorganizma tedavinin yarıda kesilmesiyle çoğalarak hastalığın çok daha şiddetli nüksetmesine neden olur." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye og ciddi zehirlenmelere yol açabilir. Süt ürünleri ise bazı antibiyotiklerin emilimini tamamen durdurabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye ve ciddi zehirlenmelere yol açabilir." }
   ];
 
   return (
@@ -239,15 +239,15 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (2 SÜTUNLU YENİ SADE OYNATICI ALANI) */}
+      {/* DİJİTAL ŞİFAHANE (neysesi-2 ve neysesi-3 SES DOSYALARI) */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
-        <div className="bg-gradient-to-br from-amber-50 to-stone-100/60 rounded-[32px] p-8 md:p-14 border border-amber-200/50 grid md:grid-cols-5 gap-10 items-center shadow-sm">
+        <div className="bg-gradient-to-br from-amber-50 to-stone-100/60 rounded-[32px] p-8 md:p-14 border grid md:grid-cols-5 gap-10 items-center shadow-sm">
           <div className="md:col-span-3 space-y-6">
             <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Kültürel Miras & Terapi</span>
             <h2 className="text-3xl font-black text-amber-950 font-serif tracking-tight">Kadim Darüşşifalar ve Müzik Terapisi</h2>
-            <p className="text-slate-600 text-sm leading-relaxed font-medium">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Yüklediğiniz iki yeni özel ney sesini aşağıdan seçerek dinleyebilirsiniz.</p>
+            <p className="text-slate-600 text-sm leading-relaxed font-medium">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Güncellediğiniz neysesi-2 ve neysesi-3 ses dosyalarını aşağıdan seçerek dinleyebilirsiniz.</p>
             
-            {/* Sadece 2 Yeni Şarkı Butonu İçin Şık Tasarım */}
+            {/* 2 Şarkı Butonu İçin Şık Tasarım */}
             <div className="grid sm:grid-cols-2 gap-3">
               {audioTracks.map((track) => {
                 const isSelected = currentTrack.id === track.id;
