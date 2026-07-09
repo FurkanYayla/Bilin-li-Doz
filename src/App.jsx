@@ -90,18 +90,17 @@ export default function App() {
         preload="auto"
       />
 
-      {/* MENÜ ALANI (Yeni Kurumsal Logo Entegre Edildi) */}
+      {/* MENÜ ALANI (Kurumsal Logo Sol Üste Entegre Edildi) */}
       <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-100/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               {/* 🌟 YENİ LOGO GÖRSELİNİZ */}
               <img 
                 src="/logo.png" 
-                alt="Bilinçli Doz Genel Logo" 
-                className="h-9 w-auto object-contain transition-transform duration-300 hover:scale-105"
+                alt="Bilinçli Doz" 
+                className="h-10 w-auto object-contain transition-transform duration-300 hover:scale-105"
                 onError={(e) => {
-                  // Eğer logo henüz yüklenmediyse kırık görünmesin diye şık bir yedek ikon koruması:
                   e.target.onerror = null;
                   e.target.style.display = 'none';
                 }}
