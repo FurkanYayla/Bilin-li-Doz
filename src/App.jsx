@@ -4,7 +4,7 @@ export default function App() {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [qrScanned, setQrScanned] = useState(false);
 
-  // 🌟 YENİ TALEBİNİZE GÖRE DÜZENLENMİŞ SES LİSTESİ (neysesi-2 ve neysesi-3)
+  // GÜNCEL SES LİSTESİ (neysesi-2 ve neysesi-3)
   const audioTracks = [
     { 
       id: 'ney-sesi-2', 
@@ -90,12 +90,22 @@ export default function App() {
         preload="auto"
       />
 
-      {/* MENÜ ALANI */}
+      {/* MENÜ ALANI (Yeni Kurumsal Logo Entegre Edildi) */}
       <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-100/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-tr from-teal-600 to-emerald-500 text-white p-2 rounded-xl shadow-md shadow-teal-600/20 text-sm">✨</div>
+            <div className="flex items-center gap-2.5">
+              {/* 🌟 YENİ LOGO GÖRSELİNİZ */}
+              <img 
+                src="/logo.png" 
+                alt="Bilinçli Doz Genel Logo" 
+                className="h-9 w-auto object-contain transition-transform duration-300 hover:scale-105"
+                onError={(e) => {
+                  // Eğer logo henüz yüklenmediyse kırık görünmesin diye şık bir yedek ikon koruması:
+                  e.target.onerror = null;
+                  e.target.style.display = 'none';
+                }}
+              />
               <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-teal-950 to-teal-700 bg-clip-text text-transparent">Bilinçli Doz</span>
             </div>
             <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
@@ -239,7 +249,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL ŞİFAHANE (neysesi-2 ve neysesi-3 SES DOSYALARI) */}
+      {/* DİJİTAL ŞİFAHANE */}
       <section id="sifahane" className="py-24 max-w-5xl mx-auto px-4">
         <div className="bg-gradient-to-br from-amber-50 to-stone-100/60 rounded-[32px] p-8 md:p-14 border grid md:grid-cols-5 gap-10 items-center shadow-sm">
           <div className="md:col-span-3 space-y-6">
@@ -247,7 +257,6 @@ export default function App() {
             <h2 className="text-3xl font-black text-amber-950 font-serif tracking-tight">Kadim Darüşşifalar ve Müzik Terapisi</h2>
             <p className="text-slate-600 text-sm leading-relaxed font-medium">Ecdadımız darüşşifalarda hastaları su sesi ve özel müzik makamlarıyla iyileştiriyordu. Güncellediğiniz neysesi-2 ve neysesi-3 ses dosyalarını aşağıdan seçerek dinleyebilirsiniz.</p>
             
-            {/* 2 Şarkı Butonu İçin Şık Tasarım */}
             <div className="grid sm:grid-cols-2 gap-3">
               {audioTracks.map((track) => {
                 const isSelected = currentTrack.id === track.id;
