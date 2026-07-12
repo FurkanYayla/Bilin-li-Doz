@@ -76,7 +76,7 @@ export default function App() {
     { id: 2, title: "İlacı nasıl kullanacağım?", desc: "Aç karnına mı, tok karnına mı alınacak? Çiğnenerek mi yutulacak, doğrudan suyla mı? Bazı hapların bölünerek içilmesi koruyucu kaplamasını bozarak mideye zarar verir veya emilimi engeller." },
     { id: 3, title: "İlacı günün hangi saatlerinde ve kaç kez kullanacağım?", desc: '"Günde 3 defa" ifadesi rastgele sabah-öğle-akşam demek değildir; kanda ilaç düzeyinin sabit kalabilmesi için tam 8 saatte bir alınması gerekir. Saat düzenine milimetrik sadakat şarttır.' },
     { id: 4, title: "İlaç tedavim kaç gün sürecek?", desc: "Kendinizi iyi hissettiğiniz an ilacı bırakmak en büyük hatalardan biridir. Özellikle antibiyotiklerde, vücutta kalan dirençli az sayıdaki mikroorganizma tedavinin yarıda kesilmesiyle çoğalarak hastalığın çok daha şiddetli nüksetmesine neden olur." },
-    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye og ciddi zehirlenmelere yol açabilir." }
+    { id: 5, title: "İlacı kullanırken kaçınmam gereken yiyecek ve içecekler var mı?", desc: "Bazı besinler ilaçlarla etkileşime girer. Örneğin greyfurt suyu birçok ilacın karaciğerde yıkımını engelleyebilir; bu durum kanda aşırı birikmeye ve ciddi zehirlenmelere yol açabilir." }
   ];
 
   return (
@@ -96,7 +96,7 @@ export default function App() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               
-              {/* NAVBAR LOGO (Heart + Pulse + Cross) */}
+              {/* NAVBAR LOGO (Mavi Kalp Vektörü) */}
               <svg 
                 className="h-9 w-9 text-blue-600 transition-transform duration-300 hover:scale-105 shrink-0" 
                 viewBox="0 0 24 24" 
@@ -167,7 +167,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* DİJİTAL PROJE KARTLARI (BROŞÜR ALANI - KART ÜSTÜ LOGO GÜNCELLENDİ) */}
+      {/* DİJİTAL PROJE KARTLARI (BROŞÜR ALANI) */}
       <section id="dijital-kartlar" className="py-24 bg-stone-100/80 border-y border-stone-200/60 px-4">
         <div className="max-w-5xl mx-auto space-y-3 text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-100 px-3 py-1 rounded-md">Fiziksel Materyal Tasarımı</span>
@@ -177,7 +177,7 @@ export default function App() {
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start">
           
-          {/* KART 1: ÖN YÜZ (5 ALTIN SORU KARTI) */}
+          {/* KART 1: ÖN YÜZ (Mavi Kalp Logosu Sağ Üste Eklendi) */}
           <div className="bg-[#fcfbf7] rounded-[28px] shadow-lg border border-stone-200/80 p-8 min-h-[540px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
             <div>
               <div className="flex justify-between items-start border-b border-stone-200 pb-4 mb-6">
@@ -186,8 +186,8 @@ export default function App() {
                   <h4 className="text-teal-950 font-black text-2xl tracking-tight mt-0.5">5 ALTIN SORU</h4>
                 </div>
                 
-                {/* 🌟 REPLİKA KARTIN ÜZERİNE DE EKLENEN RESMİ PROJE LOGONUZ */}
-                <div className="bg-blue-50/60 p-2 rounded-xl border border-blue-100/80 text-blue-600 shadow-sm">
+                {/* 🌟 KARTIN ÜZERİNDEKİ ESKİ EMOJİ YERİNE GELEN RESMİ LOGONUZ */}
+                <div className="text-blue-600 bg-blue-50/50 p-2 rounded-xl border border-blue-100/50 shadow-sm shrink-0">
                   <svg 
                     className="h-7 w-7" 
                     viewBox="0 0 24 24" 
